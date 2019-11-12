@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>10 Random Names</title>
+	<meta charset="utf-8" />
+
+	<style>
+		html {
+			font-family: 'helvetica';
+			padding: 100px 100px;
+		}
+
+		li {
+			padding: 5px 0;
+			font-size: 28px;
+		}
+
+		ul {
+			list-style-type: none;
+		}
+
+		.pageinfo {
+			font-style: italic;
+			font-size: 20px;
+		}
+	</style>
+
+	<script>
+		function loadFile() {
+			request = new XMLHttpRequest();
+			request.open("GET", "https://uinames.com/api/?amount=10", true);
+
+			request.onreadystatechange = function() {
+				if (request.readyState == 4 && request.status == 200) {
+					result = request.responseText;
+					names = JSON.parse(result);
+
+					strHTML = "<ul>";
+					names.forEach(function(name_line) {
+						strHTML += "<li>" + name_line.name + " (" + name_line.region + ")</li>";
+					})
+					strHTML += "</ul>";
+					document.getElementById("data").innerHTML = strHTML;
+				} else if (request.readyState == 4 && request.status != 200)
+					document.getElementById("data").innerHTML = "Something is wrong!";
+
+				else if (request.readyState == 3)
+					document.getElementById("data").innerHTML = "Too soon!  Try again";
+			}
+			request.send();
+		}
+	</script>
+</head>
+
+<body onload="loadFile()">
+	<h1>Random Name Generator</h1>
+	<h2>This generator returns 10 random first names. Refresh page for more.</h2>
+	<div id="data">Loading...</div>
+
+	<hr><br>
+	<div class="pageinfo">
+		The API I selected generates random names from different regions.
+		<br><br>
+		The source website is https://github.com/thm/uinames.
+		<br><br> I utilized a numerical parameter to only provide 10 names.
+		Each JSON object has a first name, a surname, a gender, and the region
+		where the name is from. I only chose to display the first name and the
+		region of origin.
+		<br><br>This API could be useful for prospective parents looking
+		for unique baby names. This could also be useful for authors and writers
+		looking for name choices for their characters.
+	</div>
+</body>
+
+</html>
